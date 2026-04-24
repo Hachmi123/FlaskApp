@@ -9,6 +9,13 @@
     🏷️ Logo officiel de la plateforme <b>Alternative Travel</b>.
   </p>
 </div>
+<!-- 3. ADMIN LOGIN -->
+<div style="background:#0f172a;padding:20px;border-radius:20px;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+  <img src="https://github.com/user-attachments/assets/49d64727-21f3-4d5b-b3ee-9612113cff5c" style="width:100%;border-radius:15px;">
+  <p style="color:#cbd5f5;margin-top:15px;font-size:14px;">
+    🔐 Page de connexion réservée à l’administrateur pour accéder au système de gestion.
+  </p>
+</div>
 
 <!-- 2. ADMIN DELETE ROOMS -->
 <div style="background:#0f172a;padding:20px;border-radius:20px;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
@@ -18,13 +25,7 @@
   </p>
 </div>
 
-<!-- 3. ADMIN LOGIN -->
-<div style="background:#0f172a;padding:20px;border-radius:20px;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
-  <img src="https://github.com/user-attachments/assets/49d64727-21f3-4d5b-b3ee-9612113cff5c" style="width:100%;border-radius:15px;">
-  <p style="color:#cbd5f5;margin-top:15px;font-size:14px;">
-    🔐 Page de connexion réservée à l’administrateur pour accéder au système de gestion.
-  </p>
-</div>
+
 
 <!-- 4. ADMIN DASHBOARD -->
 <div style="background:#0f172a;padding:20px;border-radius:20px;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
@@ -42,12 +43,6 @@
   </p>
 </div>
 
-<!-- 6. HOMEPAGE -->
-<div style="background:#0f172a;padding:20px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
-  <img src="https://github.com/user-attachments/assets/fdaaf2e7-c4dd-4d73-a411-d60f1b1d8565" style="width:100%;border-radius:15px;">
-  <p style="color:#cbd5f5;margin-top:15px;font-size:14px;">
-    🌍 Page d’accueil affichant les destinations, les offres et l’expérience globale du site.
-  </p>
-</div>
+
 
 </div>
