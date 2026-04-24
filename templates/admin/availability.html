@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Room Availability{% endblock %}
+
+{% block content %}
+<h1>Room Availability</h1>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="grid">
+        <div>
+            <label>Room</label>
+            <select name="selected_room">
+                {% for r in all_rooms %}
+                <option value="{{ r.id }}">{{ r.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Rate Plan</label>
+            <select name="rate_name">
+                {% for rt in rate_types %}
+                <option value="{{ rt.id }}">{{ rt.rate_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Quantity</label>
+            <input type="number" name="selected_quantity">
+        </div>
+
+        <div>
+            <label>From</label>
+            <input type="date" name="start_date">
+        </div>
+
+        <div>
+            <label>To</label>
+            <input type="date" name="end_date">
+        </div>
+    </div>
+
+    <button class="btn btn-primary" name="add_room">Add Availability</button>
+</form>
+
+<hr>
+
+<h2>Availability Table</h2>
+
+{% if listed_rooms %}
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Quantity</th>
+            <th>Left</th>
+            <th>Booked</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in listed_rooms %}
+        <tr>
+            <td>{{ d.listed_date }}</td>
+            <td>{{ d.quantity_per_date }}</td>
+            <td>{{ d.left_to_sell }}</td>
+            <td>{{ d.booked_quantity }}</td>
+            <td>
+                {% if d.is_it_available %}
+                    <span class="ok">Open</span>
+                {% else %}
+                    <span class="no">Closed</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No availability for selected dates.</p>
+{% endif %}
+
+<style>
+.ok{color:green;font-weight:600}
+.no{color:red;font-weight:600}
+</style>
+{% endblock %}

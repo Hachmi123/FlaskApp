@@ -1,0 +1,646 @@
+{% extends "base.html" %}
+
+{% block title %}Grand Hotel - Welcome to Luxury{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                    url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600') center/cover;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+    }
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-content p {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    /* NEW: Booking options container */
+    .booking-options-wrapper {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        margin: -80px auto 4rem;
+        max-width: 1000px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .booking-options-title {
+        text-align: center;
+        color: #1e3c72;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .booking-options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .booking-option-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .booking-option-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border-color: #1e3c72;
+    }
+
+    .booking-option-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .booking-option-card h3 {
+        color: #1e3c72;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .booking-option-card p {
+        color: #666;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .booking-option-card .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+
+    /* Hide search forms initially */
+    .search-form-container {
+        display: none;
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        margin: 2rem auto 4rem;
+        max-width: 900px;
+    }
+
+    .search-form-container.active {
+        display: block;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .search-form h2 {
+        color: #1e3c72;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    .back-to-options {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .back-to-options button {
+        background: transparent;
+        border: none;
+        color: #1e3c72;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-grid-2col {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #1e3c72;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+        font-size: 1.1rem;
+        color: #666;
+    }
+
+    .rooms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .room-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .room-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    .room-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .room-content {
+        padding: 1.5rem;
+    }
+
+    .room-content h3 {
+        color: #1e3c72;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .room-description {
+        color: #666;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        height: 80px;
+        overflow: hidden;
+    }
+
+    .room-features {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .feature-badge {
+        background-color: #e8f4f8;
+        color: #1e3c72;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .room-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f0f0f0;
+    }
+
+    .price-tag {
+        font-size: 1.8rem;
+        color: #1e3c72;
+        font-weight: bold;
+    }
+
+    .price-tag small {
+        font-size: 0.8rem;
+        color: #666;
+        font-weight: normal;
+    }
+
+    .features-section {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 4rem 0;
+        margin: 4rem 0;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .feature-item {
+        padding: 2rem;
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-item h3 {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .feature-item p {
+        color: #ecf0f1;
+        line-height: 1.6;
+    }
+
+    .no-rooms {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .no-rooms h3 {
+        color: #1e3c72;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2rem;
+        }
+
+        .hero-content p {
+            font-size: 1rem;
+        }
+
+        .booking-options-wrapper {
+            margin: -60px 20px 3rem;
+            padding: 1.5rem;
+        }
+
+        .booking-options-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .search-form-container {
+            margin: 2rem 20px 3rem;
+            padding: 1.5rem;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-grid-2col {
+            grid-template-columns: 1fr;
+        }
+
+        .rooms-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>Welcome to Alternatif Travel</h1>
+        <p>Experience Luxury. Create Memories. Live the Dream.</p>
+    </div>
+</section>
+
+<!-- Booking Options Selection -->
+<div class="container">
+    <div id="booking-options" class="booking-options-wrapper">
+        <h2 class="booking-options-title">Choose Your Experience</h2>
+        <div class="booking-options-grid">
+            <!-- Room Booking Option -->
+            <div class="booking-option-card" onclick="showBookingForm('room')">
+                <div class="booking-option-icon">🏨</div>
+                <h3>Hotel Room Booking</h3>
+                <p>Luxurious hotel rooms with premium amenities, stunning views, and exceptional service.</p>
+                <button class="btn">Book a Room</button>
+            </div>
+
+            <!-- Camping Booking Option -->
+            <div class="booking-option-card" onclick="showBookingForm('camping')">
+                <div class="booking-option-icon">🏕️</div>
+                <h3>Camping Adventure</h3>
+                <p>Connect with nature at our beautiful camping spots with modern facilities and scenic locations.</p>
+                <button class="btn">Book a Camping Spot</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Booking Search Form -->
+    <div id="room-search-form" class="search-form-container">
+        <div class="back-to-options">
+            <button onclick="hideBookingForms()">← Back to Options</button>
+        </div>
+        <div class="search-form">
+            <h2>🏨 Find Your Perfect Room</h2>
+            <form action="{{ url_for('search_rooms') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="form-grid-2col">
+                    <div class="form-group">
+                        <label for="room_check_in">Check-in Date</label>
+                        <input type="date" id="room_check_in" name="check_in" required 
+                               min="{{ (now().strftime('%Y-%m-%d') if now else '2026-01-11') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="room_check_out">Check-out Date</label>
+                        <input type="date" id="room_check_out" name="check_out" required
+                               min="{{ (now().strftime('%Y-%m-%d') if now else '2026-01-11') }}">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="num_rooms">Number of Rooms</label>
+                        <select id="num_rooms" name="num_rooms" required>
+                            <option value="1" selected>1 Room</option>
+                            <option value="2">2 Rooms</option>
+                            <option value="3">3 Rooms</option>
+                            <option value="4">4 Rooms</option>
+                            <option value="5">5+ Rooms</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="adults">Adults</label>
+                        <select id="adults" name="adults" required>
+                            <option value="1" selected>1 Adult</option>
+                            <option value="2">2 Adults</option>
+                            <option value="3">3 Adults</option>
+                            <option value="4">4 Adults</option>
+                            <option value="5">5+ Adults</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="children">Children</label>
+                        <select id="children" name="children">
+                            <option value="0" selected>0 Children</option>
+                            <option value="1">1 Child</option>
+                            <option value="2">2 Children</option>
+                            <option value="3">3 Children</option>
+                            <option value="4">4+ Children</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn search-btn">Search Available Rooms</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Camping Booking Search Form -->
+    <div id="camping-search-form" class="search-form-container">
+        <div class="back-to-options">
+            <button onclick="hideBookingForms()">← Back to Options</button>
+        </div>
+        <div class="search-form">
+            <h2>🏕️ Find Your Camping Adventure</h2>
+            <form action="{{ url_for('search_camping') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="form-grid-2col">
+                    <div class="form-group">
+                        <label for="camping_check_in">Check-in Date</label>
+                        <input type="date" id="camping_check_in" name="check_in" required 
+                               min="{{ (now().strftime('%Y-%m-%d') if now else '2026-01-11') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="camping_check_out">Check-out Date</label>
+                        <input type="date" id="camping_check_out" name="check_out" required
+                               min="{{ (now().strftime('%Y-%m-%d') if now else '2026-01-11') }}">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="num_guests">Number of Guests</label>
+                        <select id="num_guests" name="num_guests" required>
+                            <option value="1">1 Guest</option>
+                            <option value="2" selected>2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5">5 Guests</option>
+                            <option value="6">6 Guests</option>
+                            <option value="7">7 Guests</option>
+                            <option value="8">8+ Guests</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn search-btn">Search Available Camping Spots</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Rooms Section -->
+<section class="container">
+    <div class="section-title">
+        <h2>Featured Luxury Rooms</h2>
+        <p>Discover our handpicked selection of premium accommodations designed for your comfort</p>
+    </div>
+
+    {% if featured_rooms %}
+        <div class="rooms-grid">
+            {% for room in featured_rooms %}
+            <div class="room-card">
+                <img src="{{ room.image_url }}" alt="{{ room.name }}" class="room-image" 
+                     onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800'">
+                <div class="room-content">
+                    <h3>{{ room.name }}</h3>
+                    <p class="room-description">{{ room.description }}</p>
+                    
+                    <div class="room-features">
+                        <span class="feature-badge">👥 {{ room.capacity }} Guests</span>
+                        <span class="feature-badge">🛏️ {{ room.bed_type }}</span>
+                        <span class="feature-badge">📏 {{ room.size_sqm }}m²</span>
+                    </div>
+
+                    <div class="room-price">
+                        <div class="price-tag">
+                            {% if room.starting_price %}
+                                TND{{ "%.2f"|format(room.starting_price) }}
+                                <small>/night</small>
+                            {% else %}
+                                <small>Contact for pricing</small>
+                            {% endif %}
+                        </div>
+                        <span class="feature-badge" style="background-color: #28a745; color: white;">
+                            Room #{{ room.room_number }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-rooms">
+            <h3>No rooms available yet</h3>
+            <p>Our admin team is currently updating our room inventory. Please check back soon!</p>
+        </div>
+    {% endif %}
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="section-title" style="color: white;">
+            <h2>Why Choose Grand Hotel?</h2>
+            <p style="color: #ecf0f1;">Experience world-class amenities and unparalleled service</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🏊</div>
+                <h3>Luxury Pool</h3>
+                <p>Enjoy our Olympic-sized infinity pool with stunning panoramic views and poolside bar service available all day.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🍽️</div>
+                <h3>Fine Dining</h3>
+                <p>Savor exquisite cuisine at our award-winning restaurants featuring international and local specialties prepared by master chefs.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💆</div>
+                <h3>Spa & Wellness</h3>
+                <p>Rejuvenate your body and mind at our full-service spa offering therapeutic massages, facials, and wellness treatments.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🏋️</div>
+                <h3>Fitness Center</h3>
+                <p>Stay active in our state-of-the-art fitness center equipped with modern cardio machines, weights, and personal trainers.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🅿️</div>
+                <h3>Free Parking</h3>
+                <p>Complimentary secure parking available for all guests with 24/7 valet service and electric vehicle charging stations.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📶</div>
+                <h3>High-Speed WiFi</h3>
+                <p>Stay connected with complimentary high-speed internet access throughout the hotel, perfect for business and leisure.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🛎️</div>
+                <h3>24/7 Concierge</h3>
+                <p>Our dedicated concierge team is available around the clock to assist with reservations, tours, and any special requests.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✈️</div>
+                <h3>Airport Shuttle</h3>
+                <p>Complimentary airport transfer service in our luxury vehicles ensures a comfortable start and end to your journey.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showBookingForm(type) {
+        // Hide options
+        document.getElementById('booking-options').style.display = 'none';
+        
+        // Show selected form
+        if (type === 'room') {
+            document.getElementById('room-search-form').classList.add('active');
+        } else if (type === 'camping') {
+            document.getElementById('camping-search-form').classList.add('active');
+        }
+        
+        // Scroll to form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    function hideBookingForms() {
+        // Hide all forms
+        document.getElementById('room-search-form').classList.remove('active');
+        document.getElementById('camping-search-form').classList.remove('active');
+        
+        // Show options
+        document.getElementById('booking-options').style.display = 'block';
+        
+        // Scroll to options
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Set minimum date for check-in to today for rooms
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Room booking
+        const roomCheckIn = document.getElementById('room_check_in');
+        const roomCheckOut = document.getElementById('room_check_out');
+        
+        roomCheckIn.min = today;
+        roomCheckOut.min = today;
+        
+        roomCheckIn.addEventListener('change', function() {
+            const checkInDate = new Date(this.value);
+            checkInDate.setDate(checkInDate.getDate() + 1);
+            roomCheckOut.min = checkInDate.toISOString().split('T')[0];
+        });
+        
+        // Camping booking
+        const campingCheckIn = document.getElementById('camping_check_in');
+        const campingCheckOut = document.getElementById('camping_check_out');
+        
+        campingCheckIn.min = today;
+        campingCheckOut.min = today;
+        
+        campingCheckIn.addEventListener('change', function() {
+            const checkInDate = new Date(this.value);
+            checkInDate.setDate(checkInDate.getDate() + 1);
+            campingCheckOut.min = checkInDate.toISOString().split('T')[0];
+        });
+    });
+</script>
+{% endblock %}

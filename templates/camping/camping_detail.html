@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}{{ spot.name }} - Camping Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    .spot-detail-header {
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                    url('{{ spot.image_url }}') center/cover;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+    }
+
+    .spot-detail-header h1 {
+        font-size: 3rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+
+    .detail-container {
+        max-width: 900px;
+        margin: 0 auto 4rem;
+    }
+
+    .detail-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .detail-item {
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .detail-item-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .amenities-list {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 1.5rem 0;
+    }
+
+    .amenity-badge {
+        background: #e8f4f8;
+        color: #1e3c72;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.95rem;
+    }
+
+    .price-display {
+        font-size: 2.5rem;
+        color: #28a745;
+        font-weight: bold;
+        text-align: center;
+        margin: 2rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="spot-detail-header">
+    <div>
+        <h1>{{ spot.name }}</h1>
+        <p style="font-size: 1.3rem;">📍 {{ spot.location }}</p>
+    </div>
+</section>
+
+<div class="container detail-container">
+    <div class="detail-card">
+        <h2 style="color: #1e3c72; margin-bottom: 1rem;">About This Camping Spot</h2>
+        <p style="line-height: 1.8; color: #666;">{{ spot.description }}</p>
+        
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-item-icon">👥</div>
+                <strong>Capacity</strong><br>
+                Up to {{ spot.capacity }} Guests
+            </div>
+            <div class="detail-item">
+                <div class="detail-item-icon">💵</div>
+                <strong>Price</strong><br>
+                TND{{ "%.2f"|format(spot.price_per_night) }}/night
+            </div>
+            <div class="detail-item">
+                <div class="detail-item-icon">✅</div>
+                <strong>Status</strong><br>
+                {{ spot.status|title }}
+            </div>
+        </div>
+
+        {% if spot.amenities %}
+        <h3 style="color: #1e3c72; margin: 2rem 0 1rem;">Amenities & Features</h3>
+        <div class="amenities-list">
+            {% for amenity in spot.amenities.split(',') %}
+            <span class="amenity-badge">✓ {{ amenity.strip() }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="price-display">
+            TND{{ "%.2f"|format(spot.price_per_night) }}
+            <small style="font-size: 1rem; color: #666;">/night</small>
+        </div>
+
+        <a href="{{ url_for('index') }}" class="btn" style="width: 100%; font-size: 1.2rem; padding: 15px;">
+            Book This Camping Spot
+        </a>
+        
+        <a href="{{ url_for('camping_spots') }}" style="display: block; text-align: center; margin-top: 1rem; color: #1e3c72;">
+            ← Back to All Camping Spots
+        </a>
+    </div>
+</div>
+{% endblock %}

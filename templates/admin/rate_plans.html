@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Create Rate Plans{% endblock %}
+
+{% block content %}
+<h1>Create Rate Plan</h1>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="field">
+        <label>Rate Plan Name</label>
+        <input name="rate_plan_name" placeholder="Summer 2026" required>
+    </div>
+
+    <hr>
+
+    {% for i in range(1,5) %}
+    <h3>Period {{ i }}</h3>
+
+    <div class="grid">
+        <div>
+            <label>From</label>
+            <input type="date" name="start_date_{{ i }}">
+        </div>
+        <div>
+            <label>To</label>
+            <input type="date" name="end_date_{{ i }}">
+        </div>
+        <div>
+            <label>Adult</label>
+            <input type="number" name="price_per_day_adult_{{ i }}">
+        </div>
+        <div>
+            <label>Single Adult</label>
+            <input type="number" name="price_per_day_single_adult_{{ i }}">
+        </div>
+        <div>
+            <label>Child &lt;12 RB</label>
+            <input type="number" name="price_per_day_child_under_12_regular_bed_{{ i }}">
+        </div>
+        <div>
+            <label>Child &lt;12 EXB</label>
+            <input type="number" name="price_per_day_child_under_12_{{ i }}">
+        </div>
+        <div>
+            <label>Child &lt;7 EXB</label>
+            <input type="number" name="price_per_day_child_under_7_{{ i }}">
+        </div>
+        <div>
+            <label>Child &lt;2</label>
+            <input type="number" name="price_per_day_child_under_2_{{ i }}">
+        </div>
+    </div>
+    <hr>
+    {% endfor %}
+
+    <button class="btn btn-primary">Save Rate Plan</button>
+</form>
+
+<style>
+.field{margin-bottom:20px}
+h3{margin-top:30px;color:#d4af37}
+</style>
+{% endblock %}

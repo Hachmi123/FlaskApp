@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Available Camping Spots - Grand Hotel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-summary {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .search-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .summary-item strong {
+        display: block;
+        color: #1e3c72;
+        font-size: 1.1rem;
+    }
+
+    .spots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .spot-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+
+    .spot-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .spot-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .spot-content {
+        padding: 1.5rem;
+    }
+
+    .spot-content h3 {
+        color: #1e3c72;
+        margin-bottom: 0.5rem;
+    }
+
+    .spot-location {
+        color: #666;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .amenities {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin: 1rem 0;
+    }
+
+    .amenity-badge {
+        background: #e8f4f8;
+        color: #1e3c72;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+
+    .price-section {
+        border-top: 2px solid #f0f0f0;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .price-breakdown {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: #666;
+    }
+
+    .total-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #28a745;
+        margin-top: 1rem;
+    }
+
+    .no-spots {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>🏕️ Available Camping Spots</h1>
+        <p>Perfect spots for your camping adventure</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="search-summary">
+        <div class="search-summary-grid">
+            <div class="summary-item">
+                <strong>Check-in</strong>
+                {{ search_data.check_in }}
+            </div>
+            <div class="summary-item">
+                <strong>Check-out</strong>
+                {{ search_data.check_out }}
+            </div>
+            <div class="summary-item">
+                <strong>Guests</strong>
+                {{ search_data.num_guests }} Guest(s)
+            </div>
+            <div class="summary-item">
+                <strong>Found</strong>
+                {{ spots|length }} Spot(s)
+            </div>
+        </div>
+    </div>
+
+    {% if spots %}
+        <div class="spots-grid">
+            {% for spot in spots %}
+            <div class="spot-card">
+                <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="spot-image"
+                     onerror="this.src='https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800'">
+                <div class="spot-content">
+                    <h3>{{ spot.name }}</h3>
+                    <p class="spot-location">📍 {{ spot.location }}</p>
+                    <p style="color: #666; line-height: 1.6;">{{ spot.description[:100] }}...</p>
+                    
+                    {% if spot.amenities %}
+                    <div class="amenities">
+                        {% for amenity in spot.amenities.split(',')[:3] %}
+                        <span class="amenity-badge">{{ amenity.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="price-section">
+                        <div class="price-breakdown">
+                            <span>TND{{ "%.2f"|format(spot.price_per_night) }} x {{ spot.nights }} night(s)</span>
+                            <span>TND{{ "%.2f"|format(spot.price_per_night * spot.nights) }}</span>
+                        </div>
+                        <div class="total-price">
+                            <span>Total Price:</span>
+                            <span>TND{{ "%.2f"|format(spot.total_price) }}</span>
+                        </div>
+                    </div>
+
+                    <a href="{{ url_for('camping_booking_form', spot_id=spot.id) }}" class="btn" style="width: 100%; margin-top: 1rem; display: block; text-align: center;">
+                        Book Now
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-spots">
+            <h3>No camping spots available</h3>
+            <p>No spots match your search criteria. Please try different dates or guest numbers.</p>
+            <a href="{{ url_for('index') }}" class="btn" style="margin-top: 1rem;">← Back to Search</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

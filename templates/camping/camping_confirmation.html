@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Confirmed - Camping{% endblock %}
+
+{% block extra_css %}
+<style>
+    .confirmation-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .confirmation-header h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    .confirmation-container {
+        max-width: 800px;
+        margin: 0 auto 4rem;
+    }
+
+    .confirmation-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .booking-id {
+        background: #e8f4f8;
+        color: #1e3c72;
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .detail-item {
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .detail-item strong {
+        display: block;
+        color: #1e3c72;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-section {
+        border-top: 2px solid #e9ecef;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .price-total {
+        font-size: 1.8rem;
+        color: #28a745;
+        font-weight: bold;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .action-buttons .btn {
+        flex: 1;
+    }
+
+    @media (max-width: 768px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="confirmation-header">
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>Booking Confirmed!</h1>
+        <p style="font-size: 1.2rem;">Your camping adventure is all set</p>
+    </div>
+</div>
+
+<div class="container confirmation-container">
+    <div class="confirmation-card">
+        <div class="booking-id">
+            Booking ID: #{{ booking.id }}
+        </div>
+
+        <h2 style="color: #1e3c72; margin-bottom: 1.5rem; text-align: center;">
+            {{ booking.spot_name }}
+        </h2>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">
+            📍 {{ booking.location }}
+        </p>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>Guest Name</strong>
+                {{ booking.first_name }} {{ booking.last_name }}
+            </div>
+            <div class="detail-item">
+                <strong>Email</strong>
+                {{ booking.email }}
+            </div>
+            <div class="detail-item">
+                <strong>Phone</strong>
+                {{ booking.phone }}
+            </div>
+            <div class="detail-item">
+                <strong>Number of Guests</strong>
+                {{ booking.num_guests }} Guest(s)
+            </div>
+            <div class="detail-item">
+                <strong>Check-in Date</strong>
+                {{ booking.check_in_date }}
+            </div>
+            <div class="detail-item">
+                <strong>Check-out Date</strong>
+                {{ booking.check_out_date }}
+            </div>
+            <div class="detail-item">
+                <strong>Duration</strong>
+                {{ booking.nights }} Night(s)
+            </div>
+            <div class="detail-item">
+                <strong>Status</strong>
+                <span style="color: #28a745; font-weight: bold;">{{ booking.status|title }}</span>
+            </div>
+        </div>
+
+        {% if booking.special_requests %}
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #fff3cd; border-radius: 10px;">
+            <strong style="color: #856404;">Special Requests:</strong>
+            <p style="color: #856404; margin-top: 0.5rem;">{{ booking.special_requests }}</p>
+        </div>
+        {% endif %}
+
+        <div class="summary-section">
+            <h3 style="color: #1e3c72; text-align: center;">Payment Summary</h3>
+            <div class="price-total">
+                Total Paid: TND{{ "%.2f"|format(booking.total_amount) }}
+            </div>
+        </div>
+
+        <div style="background: #d4edda; color: #155724; padding: 1.5rem; border-radius: 10px; margin-top: 2rem;">
+            <h4 style="margin-bottom: 0.5rem;">📧 Confirmation Email Sent</h4>
+            <p style="margin: 0;">
+                A confirmation email has been sent to <strong>{{ booking.email }}</strong> with all the details of your camping booking.
+            </p>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('index') }}" class="btn">← Back to Home</a>
+            <a href="{{ url_for('camping_spots') }}" class="btn btn-primary">Browse More Spots</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

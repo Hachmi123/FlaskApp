@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Manage Rooms{% endblock %}
+
+{% block content %}
+<h1>Create Room</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="grid">
+        <div>
+            <label>Room Name</label>
+            <input name="room" required>
+        </div>
+
+        <div>
+            <label>Min Guests</label>
+            <input type="number" name="min_guests">
+        </div>
+
+        <div>
+            <label>Max Guests</label>
+            <input type="number" name="max_guests">
+        </div>
+
+        <div>
+            <label>Max Adults</label>
+            <input type="number" name="max_adults">
+        </div>
+
+        <div>
+            <label>Max Children</label>
+            <input type="number" name="max_children">
+        </div>
+
+        <div>
+            <label>Total Rooms</label>
+            <input type="number" name="total_rooms">
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Description</label>
+        <textarea name="room_description"></textarea>
+    </div>
+
+    <div class="field">
+        <label>Room Image</label>
+        <input type="file" name="room_image">
+    </div>
+
+    <button class="btn btn-primary">Create Room</button>
+</form>
+
+<hr>
+
+<h2>Existing Rooms</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Room</th>
+            <th>Guests</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in room_info %}
+        <tr>
+            <td>{{ r.name }}</td>
+            <td>{{ r.min_guests }}–{{ r.max_guests }}</td>
+            <td>{{ r.total_of_this_type }}</td>
+            <td>
+                <form method="POST" action="/delete_rooms">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="delete_room" value="{{ r.id }}">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+textarea{width:100%;min-height:120px}
+</style>
+{% endblock %}

@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - Grand Hotel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 400px);
+        padding: 2rem 0;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        overflow: hidden;
+        max-width: 900px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .login-image {
+        background: linear-gradient(rgba(30,60,114,0.8), rgba(42,82,152,0.8)), 
+                    url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800') center/cover;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: white;
+    }
+
+    .login-image h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .login-image p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #ecf0f1;
+    }
+
+    .login-features {
+        margin-top: 2rem;
+        list-style: none;
+    }
+
+    .login-features li {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .login-features li::before {
+        content: "✓";
+        background: #28a745;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .login-form-section {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .login-form-section h2 {
+        color: #1e3c72;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-subtitle {
+        color: #666;
+        margin-bottom: 2.5rem;
+        font-size: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.8rem;
+    }
+
+    .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 1.2rem;
+    }
+
+    .login-form-section input[type="text"],
+    .login-form-section input[type="password"] {
+        width: 100%;
+        padding: 14px 14px 14px 45px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .login-form-section input:focus {
+        border-color: #1e3c72;
+        box-shadow: 0 0 0 3px rgba(30,60,114,0.1);
+    }
+
+    .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .remember-me input[type="checkbox"] {
+        width: auto;
+        cursor: pointer;
+    }
+
+    .forgot-password {
+        color: #1e3c72;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(30,60,114,0.3);
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f0f0f0;
+        color: #666;
+    }
+
+    .demo-credentials {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+    }
+
+    .demo-credentials strong {
+        color: #856404;
+    }
+
+    .demo-credentials p {
+        margin: 0.3rem 0;
+        color: #856404;
+    }
+
+    @media (max-width: 968px) {
+        .login-card {
+            grid-template-columns: 1fr;
+        }
+
+        .login-image {
+            display: none;
+        }
+
+        .login-form-section {
+            padding: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <!-- Left Side - Branding -->
+        <div class="login-image">
+            <h2>🏨 Grand Hotel</h2>
+            <p>Manage your hotel operations with our comprehensive admin dashboard.</p>
+            <ul class="login-features">
+                <li>Room Management</li>
+                <li>Reservation Tracking</li>
+                <li>Rate Plan Control</li>
+                <li>Real-time Analytics</li>
+                <li>Guest Management</li>
+            </ul>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="login-form-section">
+            <h2>Admin Login</h2>
+            <p class="login-subtitle">Sign in to access the admin dashboard</p>
+
+            <form action="{{ url_for('admin_login') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <label for="username">
+                        👤 Username
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="username" name="username" required 
+                               placeholder="Enter your username" autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        🔒 Password
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="password" name="password" required 
+                               placeholder="Enter your password">
+                    </div>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Sign In to Dashboard
+                </button>
+            </form>
+
+            <!-- Demo Credentials Box -->
+            <div class="demo-credentials">
+                <strong>🔑 Demo Credentials:</strong>
+                <p><strong>Username:</strong> admin</p>
+                <p><strong>Password:</strong> admin123</p>
+                <p style="margin-top: 0.5rem; font-style: italic;">
+                    Use these credentials to access the demo admin panel
+                </p>
+            </div>
+
+            <div class="login-footer">
+                <p>© 2026 Grand Hotel. All rights reserved.</p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="{{ url_for('index') }}" style="color: #1e3c72;">← Back to Website</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add enter key submission
+        const form = document.querySelector('form');
+        form.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                form.submit();
+            }
+        });
+
+        // Focus on username field
+        document.getElementById('username').focus();
+    });
+</script>
+{% endblock %}

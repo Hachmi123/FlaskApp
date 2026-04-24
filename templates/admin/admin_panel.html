@@ -1,0 +1,814 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Grand Hotel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .admin-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border-bottom: 3px solid #e9ecef;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 1rem 2rem;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #666;
+        transition: all 0.3s;
+        margin-bottom: -3px;
+    }
+
+    .tab-btn:hover {
+        color: #1e3c72;
+    }
+
+    .tab-btn.active {
+        color: #1e3c72;
+        border-bottom-color: #1e3c72;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+        animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .admin-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .section-header h2 {
+        color: #1e3c72;
+        font-size: 1.8rem;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .data-table thead {
+        background: #f8f9fa;
+    }
+
+    .data-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #1e3c72;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .data-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        color: #333;
+    }
+
+    .data-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .status-confirmed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .btn-small {
+        padding: 6px 15px;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon {
+        padding: 8px 12px;
+        font-size: 1rem;
+    }
+
+    .add-form {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        border: 2px dashed #ddd;
+    }
+
+    .add-form h3 {
+        color: #1e3c72;
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        border-left: 4px solid #1e3c72;
+    }
+
+    .stat-card h3 {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1e3c72;
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        opacity: 0.3;
+        float: right;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+
+    .empty-state h3 {
+        color: #1e3c72;
+        margin-bottom: 0.5rem;
+    }
+
+    .table-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-tabs {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+
+        .tab-btn {
+            white-space: nowrap;
+        }
+
+        .data-table {
+            font-size: 0.9rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.5rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Admin Header -->
+<div class="admin-header">
+    <div class="container">
+        <h1>🏨 Admin Dashboard</h1>
+        <p>Manage your hotel and camping operations</p>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Dashboard Tabs -->
+    <div class="dashboard-tabs">
+        <button class="tab-btn active" onclick="switchTab('rooms')">Rooms</button>
+        <button class="tab-btn" onclick="switchTab('rate-plans')">Rate Plans</button>
+        <button class="tab-btn" onclick="switchTab('room-prices')">Room Prices</button>
+        <button class="tab-btn" onclick="switchTab('reservations')">Reservations</button>
+        <button class="tab-btn" onclick="switchTab('camping-spots')">Camping Spots</button>
+        <button class="tab-btn" onclick="switchTab('camping-bookings')">Camping Bookings</button>
+    </div>
+
+    <!-- ROOMS TAB -->
+    <div id="rooms-tab" class="tab-content active">
+        <div class="admin-section">
+            <!-- Add Room Form -->
+            <div class="add-form">
+                <h3>➕ Add New Room</h3>
+                <form action="{{ url_for('admin_add_room') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Room Name</label>
+                            <input type="text" name="name" required placeholder="Deluxe Ocean View">
+                        </div>
+                        <div class="form-group">
+                            <label>Room Number</label>
+                            <input type="text" name="room_number" required placeholder="101">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" required placeholder="Elegant room with stunning ocean views..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Capacity (Guests)</label>
+                            <input type="number" name="capacity" required min="1" value="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Size (sqm)</label>
+                            <input type="number" name="size_sqm" step="0.01" required placeholder="35.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Bed Type</label>
+                            <input type="text" name="bed_type" required placeholder="King">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="url" name="image_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+
+                    <button type="submit" class="btn">Add Room</button>
+                </form>
+            </div>
+
+            <!-- Rooms Table -->
+            <div class="section-header">
+                <h2>All Rooms ({{ rooms|length }})</h2>
+            </div>
+
+            {% if rooms %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Room #</th>
+                        <th>Name</th>
+                        <th>Capacity</th>
+                        <th>Size</th>
+                        <th>Bed Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room in rooms %}
+                    <tr>
+                        <td>#{{ room.id }}</td>
+                        <td><strong>{{ room.room_number }}</strong></td>
+                        <td>{{ room.name }}</td>
+                        <td>👥 {{ room.capacity }}</td>
+                        <td>📏 {{ room.size_sqm }}m²</td>
+                        <td>🛏️ {{ room.bed_type }}</td>
+                        <td>
+                            {% if room.is_active %}
+                            <span class="status-badge status-active">Active</span>
+                            {% else %}
+                            <span class="status-badge status-inactive">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{{ url_for('admin_delete_room', room_id=room.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger btn-small" 
+                                        onclick="return confirm('Delete this room?')">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No rooms found</h3>
+                <p>Add your first room using the form above</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- RATE PLANS TAB -->
+    <div id="rate-plans-tab" class="tab-content">
+        <div class="admin-section">
+            <!-- Add Rate Plan Form -->
+            <div class="add-form">
+                <h3>➕ Add New Rate Plan</h3>
+                <form action="{{ url_for('admin_add_rate_plan') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Rate Plan Name</label>
+                            <input type="text" name="name" required placeholder="Weekend Special">
+                        </div>
+                        <div class="form-group">
+                            <label>Rate Plan Type</label>
+                            <select name="type_id" required>
+                                <option value="">Select Type</option>
+                                {% for type in rate_plan_types %}
+                                <option value="{{ type.id }}">{{ type.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="2" placeholder="Rate plan description..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Add Rate Plan</button>
+                </form>
+            </div>
+
+            <!-- Rate Plans Table -->
+            <div class="section-header">
+                <h2>All Rate Plans ({{ rate_plans|length }})</h2>
+            </div>
+
+            {% if rate_plans %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plan in rate_plans %}
+                    <tr>
+                        <td>#{{ plan.id }}</td>
+                        <td><strong>{{ plan.name }}</strong></td>
+                        <td><span class="status-badge status-active">{{ plan.type_name }}</span></td>
+                        <td>{{ plan.description or 'N/A' }}</td>
+                        <td>{{ plan.created_at.strftime('%Y-%m-%d') if plan.created_at else 'N/A' }}</td>
+                        <td>
+                            <form action="{{ url_for('admin_delete_rate_plan', plan_id=plan.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger btn-small" 
+                                        onclick="return confirm('Delete this rate plan?')">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No rate plans found</h3>
+                <p>Add your first rate plan using the form above</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ROOM PRICES TAB -->
+    <div id="room-prices-tab" class="tab-content">
+        <div class="admin-section">
+            <!-- Add Room Price Form -->
+            <div class="add-form">
+                <h3>➕ Add Room Pricing</h3>
+                <form action="{{ url_for('admin_add_room_price') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Room</label>
+                            <select name="room_id" required>
+                                <option value="">Select Room</option>
+                                {% for room in rooms %}
+                                <option value="{{ room.id }}">{{ room.name }} (Room #{{ room.room_number }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rate Plan</label>
+                            <select name="rate_plan_id" required>
+                                <option value="">Select Rate Plan</option>
+                                {% for plan in rate_plans %}
+                                <option value="{{ plan.id }}">{{ plan.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (per night)</label>
+                            <input type="number" name="price" step="0.01" required placeholder="150.00">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">Add Room Price</button>
+                </form>
+            </div>
+
+            <!-- Room Prices Table -->
+            <div class="section-header">
+                <h2>All Room Prices ({{ room_prices|length }})</h2>
+            </div>
+
+            {% if room_prices %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Room</th>
+                        <th>Rate Plan</th>
+                        <th>Price/Night</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for price in room_prices %}
+                    <tr>
+                        <td>#{{ price.id }}</td>
+                        <td><strong>{{ price.room_name }}</strong></td>
+                        <td><span class="status-badge status-active">{{ price.rate_plan_name }}</span></td>
+                        <td><strong style="color: #28a745; font-size: 1.2rem;">TND{{ "%.2f"|format(price.price) }}</strong></td>
+                        <td>{{ price.created_at.strftime('%Y-%m-%d') if price.created_at else 'N/A' }}</td>
+                        <td>
+                            <form action="{{ url_for('admin_delete_room_price', price_id=price.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger btn-small" 
+                                        onclick="return confirm('Delete this pricing?')">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No room prices found</h3>
+                <p>Add pricing using the form above</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- RESERVATIONS TAB -->
+    <div id="reservations-tab" class="tab-content">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>All Reservations ({{ reservations|length }})</h2>
+            </div>
+
+            {% if reservations %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Guests</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in reservations %}
+                    <tr>
+                        <td>#{{ res.id }}</td>
+                        <td>
+                            <strong>{{ res.first_name }} {{ res.last_name }}</strong><br>
+                            <small style="color: #666;">{{ res.email }}</small><br>
+                            <small style="color: #666;">{{ res.phone }}</small>
+                        </td>
+                        <td>
+                            <strong>{{ res.room_name }}</strong><br>
+                            <small>Room #{{ res.room_number }}</small>
+                        </td>
+                        <td>{{ res.check_in_date }}</td>
+                        <td>{{ res.check_out_date }}</td>
+                        <td>{{ res.num_adults }}A / {{ res.num_children }}C</td>
+                        <td><strong style="color: #28a745;">TND{{ "%.2f"|format(res.total_amount) }}</strong></td>
+                        <td>
+                            {% if res.status == 'confirmed' %}
+                            <span class="status-badge status-confirmed">Confirmed</span>
+                            {% else %}
+                            <span class="status-badge status-pending">{{ res.status|title }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{{ url_for('admin_delete_reservation', reservation_id=res.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger btn-small" 
+                                        onclick="return confirm('Delete this reservation?')">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No reservations found</h3>
+                <p>Reservations will appear here when guests make bookings</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- CAMPING SPOTS TAB -->
+    <div id="camping-spots-tab" class="tab-content">
+        <div class="admin-section">
+            <!-- Add Camping Spot Form -->
+            <div class="add-form">
+                <h3>➕ Add New Camping Spot</h3>
+                <form action="{{ url_for('admin_add_camping_spot') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Spot Name</label>
+                            <input type="text" name="name" required placeholder="Riverside Deluxe Tent">
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" name="location" required placeholder="Near Main River">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Capacity (Guests)</label>
+                            <input type="number" name="capacity" required min="1" value="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Price per Night (TND)</label>
+                            <input type="number" name="price_per_night" step="0.01" required placeholder="85.00">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" required placeholder="Spacious tent with river view..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="url" name="image_url" placeholder="https://images.unsplash.com/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Amenities (comma-separated)</label>
+                        <input type="text" name="amenities" placeholder="Electricity, Water, Fire Pit, Picnic Table">
+                    </div>
+
+                    <button type="submit" class="btn">Add Camping Spot</button>
+                </form>
+            </div>
+
+            <!-- Camping Spots Table -->
+            <div class="section-header">
+                <h2>All Camping Spots ({{ camping_spots|length if camping_spots else 0 }})</h2>
+            </div>
+
+            {% if camping_spots %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Capacity</th>
+                        <th>Price/Night</th>
+                        <th>Status</th>
+                        <th>Amenities</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spot in camping_spots %}
+                    <tr>
+                        <td>#{{ spot.id }}</td>
+                        <td><strong>{{ spot.name }}</strong></td>
+                        <td>📍 {{ spot.location }}</td>
+                        <td>👥 {{ spot.capacity }}</td>
+                        <td><strong style="color: #28a745; font-size: 1.1rem;">{{ "%.2f"|format(spot.price_per_night) }}</strong></td>
+                        <td>
+                            {% if spot.status == 'available' %}
+                            <span class="status-badge status-active">Available</span>
+                            {% else %}
+                            <span class="status-badge status-inactive">{{ spot.status|title }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small style="color: #666;">{{ spot.amenities[:50] if spot.amenities else 'N/A' }}...</small>
+                        </td>
+                        <td>
+                            <form action="{{ url_for('admin_delete_camping_spot', spot_id=spot.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger btn-small" 
+                                        onclick="return confirm('Delete this camping spot?')">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No camping spots found</h3>
+                <p>Add your first camping spot using the form above</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- CAMPING BOOKINGS TAB -->
+    <div id="camping-bookings-tab" class="tab-content">
+        <div class="admin-section">
+            <div class="section-header">
+                <h2>All Camping Bookings ({{ camping_bookings|length if camping_bookings else 0 }})</h2>
+            </div>
+
+            {% if camping_bookings %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Guest</th>
+                        <th>Camping Spot</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Guests</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in camping_bookings %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>
+                            <strong>{{ booking.first_name }} {{ booking.last_name }}</strong><br>
+                            <small style="color: #666;">{{ booking.email }}</small><br>
+                            <small style="color: #666;">{{ booking.phone }}</small>
+                        </td>
+                        <td>
+                            <strong>{{ booking.spot_name }}</strong><br>
+                            <small>📍 {{ booking.location }}</small>
+                        </td>
+                        <td>{{ booking.check_in_date }}</td>
+                        <td>{{ booking.check_out_date }}</td>
+                        <td>👥 {{ booking.num_guests }}</td>
+                        <td><strong style="color: #28a745;">TND{{ "%.2f"|format(booking.total_price) }}</strong></td>
+                        <td>
+                            {% if booking.status == 'confirmed' %}
+                            <span class="status-badge status-confirmed">Confirmed</span>
+                            {% else %}
+                            <span class="status-badge status-pending">{{ booking.status|title }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{{ url_for('admin_delete_camping_booking', booking_id=booking.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger btn-small" 
+                                        onclick="return confirm('Delete this camping booking?')">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No camping bookings found</h3>
+                <p>Camping bookings will appear here when guests make reservations</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function switchTab(tabName) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Show selected tab
+        document.getElementById(tabName + '-tab').classList.add('active');
+        
+        // Add active class to clicked button
+        event.target.classList.add('active');
+    }
+</script>
+{% endblock %}

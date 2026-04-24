@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+
+{% block title %}Reservation Confirmed - Grand Hotel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .confirmation-container {
+        max-width: 800px;
+        margin: 3rem auto;
+    }
+
+    .success-banner {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 3rem;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    @keyframes scaleIn {
+        from {
+            transform: scale(0);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .success-banner h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .success-banner p {
+        font-size: 1.2rem;
+        color: #e8f5e9;
+    }
+
+    .confirmation-card {
+        background: white;
+        padding: 0;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    }
+
+    .confirmation-header {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-bottom: 3px solid #e9ecef;
+    }
+
+    .confirmation-number {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .conf-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.3rem;
+    }
+
+    .conf-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #1e3c72;
+        font-family: 'Courier New', monospace;
+    }
+
+    .confirmation-content {
+        padding: 2rem;
+    }
+
+    .section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section h2 {
+        color: #1e3c72;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .info-value {
+        color: #1e3c72;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .room-showcase {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .room-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .room-info h3 {
+        color: #1e3c72;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .room-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .feature-badge {
+        background: white;
+        color: #1e3c72;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .price-summary {
+        background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    .price-label {
+        color: #555;
+    }
+
+    .price-value {
+        font-weight: 600;
+        color: #1e3c72;
+    }
+
+    .total-row {
+        padding-top: 1rem;
+        margin-top: 1rem;
+        border-top: 2px solid #1e3c72;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .total-label {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #1e3c72;
+    }
+
+    .total-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1e3c72;
+    }
+
+    .alert-info-box {
+        background: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 1.5rem;
+        border-radius: 5px;
+        margin: 2rem 0;
+    }
+
+    .alert-info-box h3 {
+        color: #0c5460;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .alert-info-box ul {
+        margin-left: 1.5rem;
+        color: #0c5460;
+    }
+
+    .alert-info-box li {
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+    }
+
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-print {
+        background: #6c757d;
+    }
+
+    .btn-print:hover {
+        background: #5a6268;
+    }
+
+    .email-note {
+        text-align: center;
+        padding: 1.5rem;
+        background: #fff3cd;
+        border-radius: 10px;
+        color: #856404;
+        margin-top: 2rem;
+    }
+
+    .email-note strong {
+        color: #856404;
+    }
+
+    @media (max-width: 768px) {
+        .confirmation-number {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .room-showcase {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media print {
+        header, footer, .action-buttons {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+    <!-- Success Banner -->
+    <div class="success-banner">
+        <div class="success-icon">✅</div>
+        <h1>Reservation Confirmed!</h1>
+        <p>Your booking has been successfully processed</p>
+    </div>
+
+    <!-- Confirmation Card -->
+    <div class="confirmation-card">
+        <!-- Confirmation Header -->
+        <div class="confirmation-header">
+            <div class="confirmation-number">
+                <div>
+                    <div class="conf-label">Confirmation Number</div>
+                    <div class="conf-value">#{{ "%06d"|format(reservation.id) }}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="conf-label">Booking Date</div>
+                    <div style="font-size: 1.2rem; font-weight: 600; color: #1e3c72;">
+                        {{ reservation.check_in }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Content -->
+        <div class="confirmation-content">
+            <!-- Guest Information -->
+            <div class="section">
+                <h2>👤 Guest Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Guest Name</span>
+                        <span class="info-value">{{ reservation.client_name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email Address</span>
+                        <span class="info-value">{{ reservation.email }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reservation Details -->
+            <div class="section">
+                <h2>📅 Reservation Details</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Check-in Date</span>
+                        <span class="info-value">{{ reservation.check_in }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Check-out Date</span>
+                        <span class="info-value">{{ reservation.check_out }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Check-in Time</span>
+                        <span class="info-value">3:00 PM</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Check-out Time</span>
+                        <span class="info-value">11:00 AM</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Information -->
+            <div class="section">
+                <h2>🛏️ Room Information</h2>
+                <div class="room-showcase">
+                    <img src="{{ room.image_url }}" alt="{{ room.name }}" class="room-image"
+                         onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800'">
+                    <div class="room-info">
+                        <h3>{{ room.name }}</h3>
+                        <p style="color: #666; margin-bottom: 1rem;">Room #{{ room.room_number }}</p>
+                        <div class="room-features">
+                            <span class="feature-badge">🛏️ {{ room.bed_type }}</span>
+                            <span class="feature-badge">👥 Up to {{ room.capacity }} guests</span>
+                            <span class="feature-badge">📐 {{ room.size_sqm }}m²</span>
+                            <span class="feature-badge">📶 Free WiFi</span>
+                            <span class="feature-badge">❄️ Air Conditioning</span>
+                            <span class="feature-badge">📺 Smart TV</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="price-summary">
+                    <div class="price-row">
+                        <span class="price-label">Room Rate (per night)</span>
+                        <span class="price-value">TND{{ "%.2f"|format(reservation.total_amount / ((reservation.check_out|string|length - reservation.check_in|string|length) or 1)) }}</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="price-label">Number of Nights</span>
+                        <span class="price-value">{{ (reservation.check_out|string|length - reservation.check_in|string|length) or 1 }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">Total Amount</span>
+                        <span class="total-amount">TND{{ "%.2f"|format(reservation.total_amount) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Information -->
+            <div class="alert-info-box">
+                <h3>📋 Important Information</h3>
+                <ul>
+                    <li><strong>Payment:</strong> Full payment is due at check-in. We accept all major credit cards and cash.</li>
+                    <li><strong>Identification:</strong> A valid government-issued photo ID is required at check-in.</li>
+                    <li><strong>Cancellation Policy:</strong> Free cancellation up to 48 hours before your arrival date. Cancellations made within 48 hours will incur a one-night charge.</li>
+                    <li><strong>Early Check-in/Late Check-out:</strong> Subject to availability. Please contact us in advance to arrange.</li>
+                    <li><strong>Smoking Policy:</strong> All rooms are non-smoking. Designated smoking areas are available on the premises.</li>
+                    <li><strong>Pets:</strong> Please contact us regarding our pet policy and any additional fees.</li>
+                </ul>
+            </div>
+
+            <!-- Confirmation Email Note -->
+            <div class="email-note">
+                📧 A confirmation email has been sent to <strong>{{ reservation.email }}</strong><br>
+                Please check your inbox (and spam folder) for your reservation details.
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button onclick="window.print()" class="btn btn-print">
+                    🖨️ Print Confirmation
+                </button>
+                <a href="{{ url_for('index') }}" class="btn">
+                    🏠 Back to Home
+                </a>
+            </div>
+
+            <!-- Contact Information -->
+            <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e9ecef;">
+                <h3 style="color: #1e3c72; margin-bottom: 1rem;">Need Assistance?</h3>
+                <p style="color: #666; line-height: 1.8;">
+                    If you have any questions or need to modify your reservation, please contact us:<br>
+                    📞 <strong>+1 (555) 123-4567</strong> | 
+                    ✉️ <strong>reservations@grandhotel.com</strong><br>
+                    We're available 24/7 to assist you
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
+    
+    // Add animation on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const successIcon = document.querySelector('.success-icon');
+        setTimeout(() => {
+            successIcon.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                successIcon.style.transform = 'scale(1)';
+            }, 200);
+        }, 300);
+    });
+</script>
+{% endblock %}

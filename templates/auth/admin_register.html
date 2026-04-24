@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Admin Registration{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+        <h2>Create Admin Account</h2>
+        <p class="muted">
+            Register a new administrator to manage the hotel system.
+        </p>
+
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <!-- USERNAME -->
+            <div class="field">
+                <label>Username</label>
+                <input
+                    type="text"
+                    name="admin"
+                    placeholder="admin_username"
+                    required
+                >
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="field">
+                <label>Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="********"
+                    required
+                >
+            </div>
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="field">
+                <label>Confirm Password</label>
+                <input
+                    type="password"
+                    name="confirm_password"
+                    placeholder="********"
+                    required
+                >
+            </div>
+
+            <!-- SUBMIT -->
+            <button class="btn btn-primary full">
+                <i class="fa-solid fa-user-plus"></i>
+                Create Admin
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>
+                Already have an account?
+                <a href="/admin_login">Login here</a>
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<style>
+.auth-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:65vh;
+}
+
+.auth-card{
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:45px;
+    border-radius:16px;
+    box-shadow:0 30px 60px rgba(0,0,0,.12);
+}
+
+.auth-card h2{
+    margin-bottom:8px;
+}
+
+.muted{
+    color:#6b7280;
+    font-size:14px;
+    margin-bottom:28px;
+}
+
+.field{
+    margin-bottom:18px;
+}
+
+.field label{
+    font-weight:600;
+    margin-bottom:6px;
+    display:block;
+}
+
+.field input{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #e5e7eb;
+}
+
+.field input:focus{
+    outline:none;
+    border-color:#d4af37;
+}
+
+.full{
+    width:100%;
+    justify-content:center;
+}
+
+.auth-footer{
+    text-align:center;
+    margin-top:25px;
+}
+
+.auth-footer a{
+    color:#d4af37;
+    font-weight:600;
+}
+</style>
+{% endblock %}

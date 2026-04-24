@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Book {{ spot.name }} - Camping{% endblock %}
+
+{% block extra_css %}
+<style>
+    .booking-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .booking-container {
+        max-width: 900px;
+        margin: 0 auto 4rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .booking-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .spot-summary img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .spot-summary h3 {
+        color: #1e3c72;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .price-breakdown {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #e9ecef;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .total-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #28a745;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .booking-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="booking-header">
+    <div class="container">
+        <h1>🏕️ Complete Your Camping Booking</h1>
+        <p>Just one step away from your adventure!</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="booking-container">
+        <!-- Booking Form -->
+        <div class="booking-card">
+            <h2 style="color: #1e3c72; margin-bottom: 1.5rem;">Guest Information</h2>
+            
+            <form action="{{ url_for('create_camping_booking', spot_id=spot.id) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="first_name" required placeholder="John">
+                </div>
+
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="last_name" required placeholder="Doe">
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="john.doe@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" required placeholder="+1-555-0100">
+                </div>
+
+                <div class="form-group">
+                    <label>Special Requests (Optional)</label>
+                    <textarea name="special_requests" rows="3" placeholder="Any special requirements or requests..."></textarea>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%; font-size: 1.1rem; padding: 15px;">
+                    Confirm Booking
+                </button>
+            </form>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="booking-card spot-summary">
+            <h2 style="color: #1e3c72; margin-bottom: 1.5rem;">Booking Summary</h2>
+            
+            <img src="{{ spot.image_url }}" alt="{{ spot.name }}"
+                 onerror="this.src='https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800'">
+            
+            <h3>{{ spot.name }}</h3>
+            <p style="color: #666; margin-bottom: 1rem;">📍 {{ spot.location }}</p>
+
+            <div class="summary-detail">
+                <strong>Check-in:</strong>
+                <span>{{ search_data.check_in }}</span>
+            </div>
+
+            <div class="summary-detail">
+                <strong>Check-out:</strong>
+                <span>{{ search_data.check_out }}</span>
+            </div>
+
+            <div class="summary-detail">
+                <strong>Number of Guests:</strong>
+                <span>{{ search_data.num_guests }} Guest(s)</span>
+            </div>
+
+            <div class="summary-detail">
+                <strong>Number of Nights:</strong>
+                <span>{{ nights }} Night(s)</span>
+            </div>
+
+            <div class="price-breakdown">
+                <div class="price-row">
+                    <span>TND{{ "%.2f"|format(spot.price_per_night) }} x {{ nights }} night(s)</span>
+                    <span>TND{{ "%.2f"|format(spot.price_per_night * nights) }}</span>
+                </div>
+
+                <div class="price-row total-price">
+                    <span>Total Amount:</span>
+                    <span>TND{{ "%.2f"|format(total_price) }}</span>
+                </div>
+            </div>
+
+            <a href="{{ url_for('offer_camping') }}" style="display: block; text-align: center; margin-top: 1.5rem; color: #1e3c72;">
+                ← Choose Different Spot
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

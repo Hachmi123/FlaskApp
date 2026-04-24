@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}View Rate Plans{% endblock %}
+
+{% block content %}
+<h1>Rate Plans</h1>
+
+{% for rp in rate_plans %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ rp.rate_name }}</h2>
+
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-danger" name="delete" value="{{ rp.id }}">
+                Delete
+            </button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                {% for h in headings %}
+                <th>{{ h }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in rp.rate_plan_type %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ p.from_date }}</td>
+                <td>{{ p.to_date }}</td>
+                <td>{{ p.adult }}</td>
+                <td>{{ p.single_adult }}</td>
+                <td>{{ p.child_under_12_rb }}</td>
+                <td>{{ p.child_under_12_exb }}</td>
+                <td>{{ p.child_under_7_exb }}</td>
+                <td>{{ p.child_under_2_exb }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endfor %}
+
+<style>
+.card{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    margin-bottom:30px;
+    box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+</style>
+{% endblock %}

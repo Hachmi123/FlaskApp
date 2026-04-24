@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 400px);
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .error-content {
+        max-width: 600px;
+    }
+
+    .error-code {
+        font-size: 8rem;
+        font-weight: bold;
+        color: #1e3c72;
+        line-height: 1;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .error-title {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .error-description {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 2rem;
+        line-height: 1.8;
+    }
+
+    .error-icon {
+        font-size: 5rem;
+        margin-bottom: 2rem;
+        opacity: 0.5;
+    }
+
+    .error-suggestions {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        margin: 2rem 0;
+        text-align: left;
+    }
+
+    .error-suggestions h3 {
+        color: #1e3c72;
+        margin-bottom: 1rem;
+    }
+
+    .error-suggestions ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .error-suggestions li {
+        margin-bottom: 0.8rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .error-suggestions li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #1e3c72;
+        font-weight: bold;
+    }
+
+    .error-suggestions a {
+        color: #1e3c72;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .error-suggestions a:hover {
+        text-decoration: underline;
+    }
+
+    .error-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content">
+        <div class="error-icon">🔍</div>
+        <div class="error-code">404</div>
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-description">
+            Oops! The page you're looking for seems to have checked out early. 
+            We can't find what you're looking for, but don't worry - our homepage is always available!
+        </p>
+
+        <div class="error-suggestions">
+            <h3>Here are some helpful links:</h3>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Go to Homepage</a></li>
+                <li><a href="{{ url_for('index') }}">Search for Available Rooms</a></li>
+                <li><a href="{{ url_for('admin_login') }}">Admin Login</a></li>
+                <li>Contact us at: <strong>+1 (555) 123-4567</strong></li>
+            </ul>
+        </div>
+
+        <div class="error-actions">
+            <a href="{{ url_for('index') }}" class="btn">Return to Homepage</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
