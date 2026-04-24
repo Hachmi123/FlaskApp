@@ -1,4 +1,4 @@
-## 🖼️ Project Preview
+##  Project Preview
 
 <div align="center">
 
@@ -24,7 +24,13 @@
   </p>
 </div>
 
-
+<div style="background:#0f172a;padding:20px;border-radius:20px;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+  <img src="https://github.com/user-attachments/assets/f6f4a918-cb7a-4d07-b12b-2382396d8127" style="width:100%;border-radius:15px;">
+ 
+   <p style="color:#cbd5f5;margin-top:15px;font-size:14px;">
+    🌍 Page d’accueil affichant les destinations, les offres et l’expérience globale du site.
+  </p>
+</div>
 
 <div style="background:#0f172a;padding:20px;border-radius:20px;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
   <img src="https://github.com/user-attachments/assets/6fd45aef-dddc-47f0-8100-15204ad8057c" style="width:100%;border-radius:15px;">
@@ -33,13 +39,7 @@
   </p>
 </div>
 
-<div style="background:#0f172a;padding:20px;border-radius:20px;margin-bottom:30px;box-shadow:0 10px 30px rgba(0,0,0,0.4);">
-  <img src="https://github.com/user-attachments/assets/f6f4a918-cb7a-4d07-b12b-2382396d8127" style="width:100%;border-radius:15px;">
- 
-   <p style="color:#cbd5f5;margin-top:15px;font-size:14px;">
-    🌍 Page d’accueil affichant les destinations, les offres et l’expérience globale du site.
-  </p>
-</div>
+
 
 
 
